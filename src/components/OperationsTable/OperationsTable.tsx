@@ -14,6 +14,7 @@ interface Item {
 interface EditableCellProps {
   title: React.ReactNode;
   editable: boolean;
+  placeholder: string;
   dataIndex: keyof Item;
   record: Item;
   handleSave: (record: Item) => void;
@@ -22,6 +23,7 @@ interface EditableCellProps {
 
 const EditableCell: React.FC<EditableCellProps> = ({
   title,
+  placeholder,
   editable,
   children,
   dataIndex,
@@ -48,7 +50,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       <Input
         ref={inputRef}
         defaultValue={record[dataIndex]}
-        placeholder={`e.g. ${title}`}
+        placeholder={`e.g. ${placeholder}`}
         onChange={handleChange}
       />
     );
