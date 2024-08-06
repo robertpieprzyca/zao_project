@@ -1,3 +1,4 @@
+// DiagramBlock.tsx
 import React from "react";
 import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
@@ -8,6 +9,10 @@ interface DataType {
   name: string;
   age: number;
   address: string;
+}
+
+interface DiagramBlockProps {
+  data: DataType[];
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -63,27 +68,6 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "10",
-    age: 10,
-    address: "10",
-  },
-  {
-    key: "2",
-    name: "10", // This row will be merged
-    age: 42,
-    address: "10",
-  },
-  {
-    key: "3",
-    name: "10",
-    age: 32,
-    address: "10",
-  },
-];
-
 const onChange: TableProps<DataType>["onChange"] = (
   pagination,
   filters,
@@ -93,7 +77,7 @@ const onChange: TableProps<DataType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-const DiagramBlock: React.FC = () => (
+const DiagramBlock: React.FC<DiagramBlockProps> = ({ data }) => (
   <div className="diagram-block">
     <Table
       columns={columns}

@@ -1,46 +1,47 @@
-.diagram-block {
-  width: 150px;
-  height: 169px;
-  border: 1px solid #000000;
-  overflow: hidden;
-  box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+/* DiagramBlock.css */
 
-  margin: auto;
+.diagram-block {
+  width: 150px; /* Fixed width */
+  height: 169px; /* Fixed height */
+  border: 1px solid #000000; /* Border */
+  overflow: hidden; /* Hide overflow content */
+  box-sizing: border-box; /* Include border and padding in element's total width and height */
+  /* Removed position and margin styles */
+  display: flex; /* Flex container to center content */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+.diagram-block-table {
+  width: 100%; /* Ensure table takes full width */
+  height: 100%; /* Ensure table takes full height */
 }
 
 .diagram-block-table .ant-table {
-  width: 100%;
-  height: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
+  width: 100%; /* Ensure table takes full width */
+  height: 100%; /* Ensure table takes full height */
+  table-layout: fixed; /* Fixed table layout */
+  border-collapse: collapse; /* Collapsed table borders */
 }
 
 .diagram-block-table .ant-table-container {
-  height: 100%;
+  height: 100%; /* Ensure table container takes full height */
 }
 
 .diagram-block-table .ant-table-body {
-  height: 100%;
-  display: table;
+  height: 100%; /* Ensure table body takes full height */
 }
 
 .diagram-block-table .ant-table-tbody {
-  height: 100%;
-  display: table;
+  height: 100%; /* Ensure table body takes full height */
 }
 
 .diagram-block-table .ant-table-tbody > tr {
-  height: 33.33%;
-  display: table-row;
+  height: 33.33%; /* Ensure table rows are evenly distributed */
 }
 
 .diagram-block-table .ant-table-cell {
-  text-align: center;
-  border: 1px solid #000000;
-  box-sizing: border-box;
+  text-align: center; /* Center text */
+  border: 1px solid #000000; /* Border for table cells */
+  box-sizing: border-box; /* Include border and padding in element's total width and height */
 }
