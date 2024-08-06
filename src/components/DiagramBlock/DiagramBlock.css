@@ -1,0 +1,46 @@
+.diagram-block {
+  width: 150px;
+  height: 169px;
+  border: 1px solid #000000;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  margin: auto;
+}
+
+.diagram-block-table .ant-table {
+  width: 100%;
+  height: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.diagram-block-table .ant-table-container {
+  height: 100%;
+}
+
+.diagram-block-table .ant-table-body {
+  height: 100%;
+  display: table;
+}
+
+.diagram-block-table .ant-table-tbody {
+  height: 100%;
+  display: table;
+}
+
+.diagram-block-table .ant-table-tbody > tr {
+  height: 33.33%;
+  display: table-row;
+}
+
+.diagram-block-table .ant-table-cell {
+  text-align: center;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+}
