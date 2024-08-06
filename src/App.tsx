@@ -1,5 +1,6 @@
 import OperationsTable from "./components/OperationsTable/OperationsTable.tsx";
 import DiagramBlock from "./components/DiagramBlock/DiagramBlock.tsx";
+import DiagramField from "./components/DiagramField/DiagramField.tsx";
 
 function App() {
   return (
@@ -9,6 +10,9 @@ function App() {
       </div>
       <div>
         <DiagramBlock></DiagramBlock>
+      </div>
+      <div>
+        <DiagramField></DiagramField>
       </div>
     </div>
   );

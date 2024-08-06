@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Form, Input, Popconfirm, Table, message } from "antd";
+import { Button, Input, Popconfirm, Table, message } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import type { InputRef } from "antd/es/input";
 
@@ -49,7 +49,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     childNode = (
       <Input
         ref={inputRef}
-        defaultValue={record[dataIndex]}
+        defaultValue={record[dataIndex] as string | number}
         placeholder={`e.g. ${placeholder}`}
         onChange={handleChange}
       />
@@ -172,6 +172,7 @@ const OperationsTable: React.FC = () => {
       message.error(`Validation failed: ${errors.join(" | ")}`);
     } else {
       console.log("Saved data:", JSON.stringify(validatedData, null, 2));
+      localStorage.setItem("operationsData", JSON.stringify(validatedData));
       message.success("All data saved successfully!");
     }
   };
@@ -216,7 +217,6 @@ const OperationsTable: React.FC = () => {
         <Button type="primary" onClick={handleSaveAll}>
           Save
         </Button>
-        <Button type="primary">Calculate</Button>
       </div>
     </div>
   );
