@@ -1,94 +1,47 @@
-// DiagramBlock.tsx
 import React from "react";
-import { Table } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
-import "./DiagramBlock.css";
-
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import type { Operation } from "../../utils/pdmutils"; // Import the type for Operation
+import "./DiagramBlock.css"; // Ensure you have the styles
 
 interface DiagramBlockProps {
-  data: DataType[];
+  data: Operation;
 }
 
-const columns: TableColumnsType<DataType> = [
-  {
-    title: "",
-    dataIndex: "name",
-    key: "name",
-    render: (text, record, index) => {
-      // Merge the middle row
-      if (index === 1) {
-        return {
-          children: "Merged Row",
-          props: {
-            colSpan: 3,
-          },
-        };
-      }
-      return text;
+const DiagramBlock: React.FC<DiagramBlockProps> = ({ data }) => {
+  // Define the rows with the relevant data
+  const rows = [
+    {
+      value1: data.earliest_start ?? 0,
+      value2: data.operation_number,
+      value3: data.earliest_finish ?? 0,
     },
-    width: "33%",
-  },
-  {
-    title: "",
-    dataIndex: "age",
-    key: "age",
-    render: (text, record, index) => {
-      if (index === 1) {
-        return {
-          props: {
-            colSpan: 0,
-          },
-        };
-      }
-      return text;
+    {
+      value1: data.latest_start ?? 0,
+      value2: data.operation_time,
+      value3: data.latest_finish ?? 0,
     },
-    width: "33%",
-  },
-  {
-    title: "",
-    dataIndex: "address",
-    key: "address",
-    render: (text, record, index) => {
-      if (index === 1) {
-        return {
-          props: {
-            colSpan: 0,
-          },
-        };
-      }
-      return text;
-    },
-    width: "34%",
-  },
-];
+  ];
 
-const onChange: TableProps<DataType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log("params", pagination, filters, sorter, extra);
+  return (
+    <TableContainer component={Paper} className="diagram-block">
+      <Table size="small">
+        <TableBody>
+          {rows.map((row, rowIndex) => (
+            <TableRow key={rowIndex}>
+              <TableCell className="diagram-cell">{row.value1}</TableCell>
+              <TableCell className="diagram-cell">{row.value2}</TableCell>
+              <TableCell className="diagram-cell">{row.value3}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 };
-
-const DiagramBlock: React.FC<DiagramBlockProps> = ({ data }) => (
-  <div className="diagram-block">
-    <Table
-      columns={columns}
-      dataSource={data}
-      onChange={onChange}
-      bordered
-      pagination={false}
-      showHeader={false}
-      className="diagram-block-table"
-    />
-  </div>
-);
 
 export default DiagramBlock;

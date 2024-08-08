@@ -1,19 +1,12 @@
-// DiagramField.tsx
 import React, { useState } from "react";
-import { Button } from "antd";
-import DiagramBlock from "../DiagramBlock/DiagramBlock"; // Adjust import path as needed
-import "./DiagramField.css"; // Import the CSS file
-
-interface Item {
-  key: string;
-  operation_number: string;
-  operation_time?: number;
-  next_operation_number: string;
-  number_of_resources?: number;
-}
+import { Button } from "@mui/material";
+import { calculatePDM } from "../../utils/pdmutils"; // Import the calculation functions
+import type { Operation } from "../../utils/pdmutils"; // Import the type for Operation
+import DiagramBlock from "../DiagramBlock/DiagramBlock"; // Ensure this is the correct path to your DiagramBlock component
+import "./DiagramField.css"; // Ensure you have the styles
 
 const DiagramField: React.FC = () => {
-  const [dataSource, setDataSource] = useState<Item[]>([]);
+  const [dataSource, setDataSource] = useState<Operation[]>([]);
 
   const fetchDataFromLocalStorage = () => {
     const savedData = localStorage.getItem("operationsData");
@@ -25,28 +18,23 @@ const DiagramField: React.FC = () => {
 
   const handleCalculate = () => {
     const latestData = fetchDataFromLocalStorage();
-    setDataSource(latestData);
+    const calculatedData = calculatePDM(latestData); // Calculate the PDM values
+    setDataSource(calculatedData);
 
-    console.log("Calculating with data:", latestData);
+    console.log("Calculated data:", calculatedData);
   };
 
-  // Convert dataSource to fit DiagramBlock's DataType structure
-  const formattedData = dataSource.map((item) => ({
-    key: item.key,
-    name: item.operation_number, // or any other mapping
-    age: item.operation_time ?? 0, // provide default value if needed
-    address: item.next_operation_number, // or any other mapping
-  }));
-
   return (
-    <div>
+    <div className="diagram-field">
       <h2>Diagram Field</h2>
-      <Button type="primary" onClick={handleCalculate}>
+      <Button variant="contained" color="primary" onClick={handleCalculate}>
         Calculate
       </Button>
-      <div className="diagram-field">
-        {formattedData.map((data, index) => (
-          <DiagramBlock key={index} data={[data]} />
+
+      {/* Render DiagramBlocks based on dataSource */}
+      <div className="diagram-blocks-container">
+        {dataSource.map((item) => (
+          <DiagramBlock key={item.key} data={item} />
         ))}
       </div>
     </div>

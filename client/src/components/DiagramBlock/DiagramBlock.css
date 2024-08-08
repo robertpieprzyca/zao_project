@@ -1,47 +1,32 @@
-/* DiagramBlock.css */
-
 .diagram-block {
-  width: 150px; /* Fixed width */
-  height: 169px; /* Fixed height */
-  border: 1px solid #000000; /* Border */
-  overflow: hidden; /* Hide overflow content */
-  box-sizing: border-box; /* Include border and padding in element's total width and height */
-  /* Removed position and margin styles */
-  display: flex; /* Flex container to center content */
-  justify-content: center; /* Center content horizontally */
+  width: 200px;
+  height: 200px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.MuiTable-root {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse; /* Ensure no extra spacing between cells */
+}
+
+.MuiTableBody-root {
+  display: table;
+  height: 100%;
+}
+
+.MuiTableCell-root {
+  padding: 0;
+  border: 1px solid black;
+  display: flex;
   align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+  width: 33.33%; /* Ensure cells fit evenly in the 3 columns */
+  height: 50%; /* Ensure cells take up half of the block height */
 }
 
-.diagram-block-table {
-  width: 100%; /* Ensure table takes full width */
-  height: 100%; /* Ensure table takes full height */
-}
-
-.diagram-block-table .ant-table {
-  width: 100%; /* Ensure table takes full width */
-  height: 100%; /* Ensure table takes full height */
-  table-layout: fixed; /* Fixed table layout */
-  border-collapse: collapse; /* Collapsed table borders */
-}
-
-.diagram-block-table .ant-table-container {
-  height: 100%; /* Ensure table container takes full height */
-}
-
-.diagram-block-table .ant-table-body {
-  height: 100%; /* Ensure table body takes full height */
-}
-
-.diagram-block-table .ant-table-tbody {
-  height: 100%; /* Ensure table body takes full height */
-}
-
-.diagram-block-table .ant-table-tbody > tr {
-  height: 33.33%; /* Ensure table rows are evenly distributed */
-}
-
-.diagram-block-table .ant-table-cell {
-  text-align: center; /* Center text */
-  border: 1px solid #000000; /* Border for table cells */
-  box-sizing: border-box; /* Include border and padding in element's total width and height */
+.MuiTableRow-root {
+  height: 50%; /* Ensure rows take up half of the block height */
 }
