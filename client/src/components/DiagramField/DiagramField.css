@@ -1,10 +1,9 @@
-/* DiagramField.css */
 .diagram-field {
-  padding: 20px; /* Adjust padding as needed */
-}
-
-.diagram-blocks-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* Adjust gap between blocks as needed */
+  gap: 10px;
+}
+
+.diagram-block-container {
+  margin: 5px;
 }

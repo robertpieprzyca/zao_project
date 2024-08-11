@@ -26,7 +26,3 @@
   width: 33.33%; /* Ensure cells fit evenly in the 3 columns */
   height: 50%; /* Ensure cells take up half of the block height */
 }
-
-.MuiTableRow-root {
-  height: 50%; /* Ensure rows take up half of the block height */
-}

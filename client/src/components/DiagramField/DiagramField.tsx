@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
-import { calculatePDM } from "../../utils/pdmutils"; // Import the calculation functions
-import type { Operation } from "../../utils/pdmutils"; // Import the type for Operation
-import DiagramBlock from "../DiagramBlock/DiagramBlock"; // Ensure this is the correct path to your DiagramBlock component
-import "./DiagramField.css"; // Ensure you have the styles
+import { Button } from "antd";
+import { calculatePDM } from "../../utils/pdmutils";
+import type { Operation } from "../../utils/pdmutils";
+import DiagramBlock from "../DiagramBlock/DiagramBlock";
+import "./DiagramField.css";
 
 const DiagramField: React.FC = () => {
   const [dataSource, setDataSource] = useState<Operation[]>([]);
@@ -18,25 +18,32 @@ const DiagramField: React.FC = () => {
 
   const handleCalculate = () => {
     const latestData = fetchDataFromLocalStorage();
-    const calculatedData = calculatePDM(latestData); // Calculate the PDM values
-    setDataSource(calculatedData);
+    calculatePDM(latestData);
+    setDataSource(latestData);
 
-    console.log("Calculated data:", calculatedData);
+    console.log("Calculating with data:", latestData);
   };
 
   return (
     <div className="diagram-field">
       <h2>Diagram Field</h2>
-      <Button variant="contained" color="primary" onClick={handleCalculate}>
+      <Button type="primary" onClick={handleCalculate}>
         Calculate
       </Button>
 
-      {/* Render DiagramBlocks based on dataSource */}
-      <div className="diagram-blocks-container">
-        {dataSource.map((item) => (
-          <DiagramBlock key={item.key} data={item} />
-        ))}
-      </div>
+      {dataSource.map((item) => (
+        <div key={item.key} className="diagram-block-container">
+          <DiagramBlock
+            data={{
+              ...item,
+              earliest_start: item.earliest_start ?? 0,
+              earliest_finish: item.earliest_finish ?? 0,
+              latest_start: item.latest_start ?? 0,
+              latest_finish: item.latest_finish ?? 0,
+            }}
+          />
+        </div>
+      ))}
     </div>
   );
 };

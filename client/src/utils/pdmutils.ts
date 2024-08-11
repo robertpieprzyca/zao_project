@@ -10,15 +10,15 @@ export type Operation = {
   latest_finish?: number;
 };
 
-export const calculatePDM = (operations: Operation[]): Operation[] => {
+export const calculatePDM = (operations: Operation[]) => {
   const operationMap = new Map<string, Operation>();
 
   operations.forEach((operation) => {
     // Initialize properties to avoid undefined errors
     operation.earliest_start = 0;
     operation.earliest_finish = 0;
-    operation.latest_start = Infinity;
-    operation.latest_finish = Infinity;
+    operation.latest_start = 0;
+    operation.latest_finish = 0;
 
     operationMap.set(operation.operation_number, operation);
   });
@@ -38,54 +38,48 @@ const calculateEarliest = (
   operation: Operation,
   operationMap: Map<string, Operation>
 ) => {
-  if (operation.earliest_finish! > 0) return;
+  if (operation.earliest_start !== 0) return;
 
-  // Find predecessors
-  const predecessors = Array.from(operationMap.values()).filter(
-    (op) => op.next_operation_number === operation.operation_number
+  // Find predecessors based on their next_operation_number
+  const predecessors = Array.from(operationMap.values()).filter((op) =>
+    op.next_operation_number.split(",").includes(operation.operation_number)
   );
 
   if (predecessors.length === 0) {
     operation.earliest_start = 0;
   } else {
-    // Calculate the earliest start based on predecessors' earliest finish
     operation.earliest_start = Math.max(
       ...predecessors.map((predecessor) => {
         calculateEarliest(predecessor, operationMap);
-        return predecessor.earliest_finish!;
+        return predecessor.earliest_finish!; // Non-null assertion
       })
     );
   }
 
-  // Calculate earliest finish
   operation.earliest_finish =
-    +operation.earliest_start! + +operation.operation_time;
+    +operation.earliest_start + +operation.operation_time;
 };
 
 const calculateLatest = (
   operation: Operation,
   operationMap: Map<string, Operation>
 ) => {
-  if (operation.latest_finish! < Infinity) return;
+  if (operation.latest_finish !== 0) return;
 
-  // Find successors
-  const successors = Array.from(operationMap.values()).filter(
-    (op) => op.operation_number === operation.next_operation_number
+  const successors = Array.from(operationMap.values()).filter((op) =>
+    operation.next_operation_number.split(",").includes(op.operation_number)
   );
 
-  if (successors.length === 0 || operation.next_operation_number === "-") {
-    // For the last operation or standalone
+  if (successors.length === 0) {
     operation.latest_finish = operation.earliest_finish!;
   } else {
-    // Calculate latest finish based on successors' latest start
     operation.latest_finish = Math.min(
       ...successors.map((successor) => {
         calculateLatest(successor, operationMap);
-        return successor.latest_start!;
+        return successor.latest_start!; // Non-null assertion
       })
     );
   }
 
-  // Calculate latest start
-  operation.latest_start = operation.latest_finish! - operation.operation_time;
+  operation.latest_start = +operation.latest_finish - +operation.operation_time;
 };
