@@ -18,32 +18,55 @@ const DiagramField: React.FC = () => {
 
   const handleCalculate = () => {
     const latestData = fetchDataFromLocalStorage();
-    calculatePDM(latestData);
-    setDataSource(latestData);
+    const calculatedData = calculatePDM(latestData);
+    setDataSource(calculatedData);
 
-    console.log("Calculating with data:", latestData);
+    console.log("Calculating with data:", calculatedData);
   };
+
+  // Group operations by earliest_start time
+  const groupedData = dataSource.reduce(
+    (acc: { [key: number]: Operation[] }, operation) => {
+      if (
+        operation.earliest_start !== undefined &&
+        operation.earliest_finish !== undefined &&
+        operation.latest_start !== undefined &&
+        operation.latest_finish !== undefined &&
+        operation.time_slack !== undefined
+      ) {
+        const level = operation.earliest_start;
+        if (!acc[level]) {
+          acc[level] = [];
+        }
+        acc[level].push(operation);
+      }
+      return acc;
+    },
+    {}
+  );
 
   return (
     <div className="diagram-field">
-      <h2>Diagram Field</h2>
+      <h2 className="diagram-title">Diagram Field</h2>
       <Button type="primary" onClick={handleCalculate}>
         Calculate
       </Button>
 
-      {dataSource.map((item) => (
-        <div key={item.key} className="diagram-block-container">
-          <DiagramBlock
-            data={{
-              ...item,
-              earliest_start: item.earliest_start ?? 0,
-              earliest_finish: item.earliest_finish ?? 0,
-              latest_start: item.latest_start ?? 0,
-              latest_finish: item.latest_finish ?? 0,
-            }}
-          />
+      {Object.keys(groupedData).length > 0 && (
+        <div className="diagram-grid-container">
+          <div className="diagram-grid">
+            {Object.keys(groupedData).map((level) => (
+              <div key={level} className="diagram-column">
+                {groupedData[+level].map((item) => (
+                  <div key={item.key} className="diagram-block-container">
+                    <DiagramBlock data={item as Required<Operation>} />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };

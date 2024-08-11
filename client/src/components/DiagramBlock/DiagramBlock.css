@@ -1,28 +1,3 @@
-.diagram-block {
-  width: 200px;
-  height: 200px;
-  border: 1px solid black;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.MuiTable-root {
-  width: 100%;
-  height: 100%;
-  border-collapse: collapse; /* Ensure no extra spacing between cells */
-}
-
-.MuiTableBody-root {
-  display: table;
-  height: 100%;
-}
-
-.MuiTableCell-root {
-  padding: 0;
-  border: 1px solid black;
-  display: flex;
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
-  width: 33.33%; /* Ensure cells fit evenly in the 3 columns */
-  height: 50%; /* Ensure cells take up half of the block height */
+.block-data {
+  padding: 12px !important;
 }

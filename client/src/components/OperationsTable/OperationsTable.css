@@ -1,4 +1,13 @@
 .action-buttons {
   display: flex;
-  gap: 20px;
+  gap: 16px;
+  margin-top: 16px;
+  margin-left: 16px;
+}
+.delete_button {
+  color: #fff;
+  background: rgb(220, 20, 60);
+}
+.delete_button:hover {
+  background: rgb(153, 16, 43) !important;
 }

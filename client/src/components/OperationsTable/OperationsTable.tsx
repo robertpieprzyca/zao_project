@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Input, Popconfirm, Table, message } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import type { InputRef } from "antd/es/input";
+import "./OperationsTable.css";
 
 interface Item {
   key: string;
@@ -117,7 +118,9 @@ const OperationsTable: React.FC = () => {
             title="Sure to delete?"
             onConfirm={() => handleDelete(record.key)}
           >
-            <a>x</a>
+            <Button className="delete_button" type="primary">
+              Delete
+            </Button>
           </Popconfirm>
         ) : null,
     },
