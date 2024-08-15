@@ -63,7 +63,7 @@ const DiagramField: React.FC = () => {
       </Button>
 
       {Object.keys(groupedData).length > 0 && (
-        <ArcherContainer strokeColor="red" strokeWidth={2}>
+        <ArcherContainer>
           <div className="diagram-grid-container">
             <div className="diagram-grid">
               {Object.keys(groupedData).map((level) => (
@@ -81,10 +81,10 @@ const DiagramField: React.FC = () => {
                               (op) => op.key === targetId
                             );
                             const strokeColor =
+                              item.time_slack === 0 &&
                               targetOperation?.time_slack === 0
                                 ? "red"
                                 : "black";
-
                             return targetId
                               ? {
                                   targetId: targetId,
@@ -92,7 +92,8 @@ const DiagramField: React.FC = () => {
                                   sourceAnchor: "right",
                                   style: {
                                     strokeColor: strokeColor,
-                                    strokeWidth: 1,
+                                    strokeWidth: 1.5,
+                                    lineStyle: "curve",
                                   },
                                 }
                               : null;
