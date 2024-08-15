@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "antd";
+import { ArcherContainer, ArcherElement } from "react-archer";
 import { calculatePDM } from "../../utils/pdmutils";
 import type { Operation } from "../../utils/pdmutils";
 import DiagramBlock from "../DiagramBlock/DiagramBlock";
@@ -45,6 +46,15 @@ const DiagramField: React.FC = () => {
     {}
   );
 
+  // Define idMap with the appropriate type
+  const idMap: { [key: string]: string } = dataSource.reduce(
+    (map, operation) => {
+      map[operation.operation_number] = operation.key;
+      return map;
+    },
+    {} as { [key: string]: string }
+  );
+
   return (
     <div className="diagram-field">
       <h2 className="diagram-title">Diagram Field</h2>
@@ -53,19 +63,53 @@ const DiagramField: React.FC = () => {
       </Button>
 
       {Object.keys(groupedData).length > 0 && (
-        <div className="diagram-grid-container">
-          <div className="diagram-grid">
-            {Object.keys(groupedData).map((level) => (
-              <div key={level} className="diagram-column">
-                {groupedData[+level].map((item) => (
-                  <div key={item.key} className="diagram-block-container">
-                    <DiagramBlock data={item as Required<Operation>} />
-                  </div>
-                ))}
-              </div>
-            ))}
+        <ArcherContainer strokeColor="red" strokeWidth={2}>
+          <div className="diagram-grid-container">
+            <div className="diagram-grid">
+              {Object.keys(groupedData).map((level) => (
+                <div key={level} className="diagram-column">
+                  {groupedData[+level].map((item) => (
+                    <ArcherElement
+                      key={item.key}
+                      id={item.key}
+                      relations={
+                        item.next_operation_number
+                          .split(",")
+                          .map((nextOp) => {
+                            const targetId = idMap[nextOp.trim()];
+                            const targetOperation = dataSource.find(
+                              (op) => op.key === targetId
+                            );
+                            const strokeColor =
+                              targetOperation?.time_slack === 0
+                                ? "red"
+                                : "black";
+
+                            return targetId
+                              ? {
+                                  targetId: targetId,
+                                  targetAnchor: "left",
+                                  sourceAnchor: "right",
+                                  style: {
+                                    strokeColor: strokeColor,
+                                    strokeWidth: 1,
+                                  },
+                                }
+                              : null;
+                          })
+                          .filter((relation) => relation !== null) as any
+                      } // Remove null entries
+                    >
+                      <div className="diagram-block-container">
+                        <DiagramBlock data={item as Required<Operation>} />
+                      </div>
+                    </ArcherElement>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </ArcherContainer>
       )}
     </div>
   );
