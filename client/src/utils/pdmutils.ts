@@ -4,7 +4,7 @@ export type Operation = {
   operation_time: number;
   next_operation_number: string;
   number_of_resources?: number;
-  earliest_start?: number;
+  earliest_start: number;
   earliest_finish?: number;
   latest_start?: number;
   latest_finish?: number;
