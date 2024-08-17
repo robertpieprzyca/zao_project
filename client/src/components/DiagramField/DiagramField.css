@@ -3,6 +3,11 @@
   flex-direction: column;
   align-items: center;
 }
+.archer-container {
+  /* tutaj sie odjebalo - ze scrollem i szerokoscia grid container*/
+  display: flex;
+  width: 100%;
+}
 
 .diagram-grid {
   display: flex;

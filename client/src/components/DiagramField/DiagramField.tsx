@@ -22,24 +22,35 @@ const DiagramField: React.FC = () => {
     const latestData = fetchDataFromLocalStorage();
     const calculatedData = calculatePDM(latestData);
     setDataSource(calculatedData);
-    console.log("Calculating with data:", calculatedData);
   };
 
   useEffect(() => {
+    // Group operations by their columns
+    const groupedData = dataSource.reduce(
+      (acc: { [key: number]: Operation[] }, operation) => {
+        const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
+        if (!acc[level]) {
+          acc[level] = [];
+        }
+        acc[level].push(operation);
+        return acc;
+      },
+      {}
+    );
+
     const newPositions = new Map<string, number>();
 
-    // Initial margin calculation
+    // First pass to set initial margins
     Object.keys(groupedData).forEach((level) => {
       const column = groupedData[+level];
 
       column.forEach((operation, index) => {
-        // Set the marginTop for the first item to 0px and subsequent items to 48px
-        const marginTop = index === 0 ? 0 : 48;
+        const marginTop = index === 0 ? 0 : 48; // Set initial margin for the first item, and 48px for subsequent items
         newPositions.set(operation.key, marginTop);
       });
     });
 
-    // Align operations with a single predecessor
+    // Second pass to align alone operations with one predecessor
     Object.keys(groupedData).forEach((level) => {
       const column = groupedData[+level];
 
@@ -53,48 +64,38 @@ const DiagramField: React.FC = () => {
 
         if (predecessors.length === 1 && column.length === 1) {
           const predecessor = predecessors[0];
-          const predecessorPosition = positions.get(predecessor.key);
+          const predecessorColumn =
+            groupedData[+predecessor.earliest_start] || [];
 
-          if (predecessorPosition !== undefined) {
-            // Calculate vertical offset for alignment
-            const numOperationsAbove = dataSource.filter(
-              (op) =>
-                op.key !== operation.key &&
-                (groupedData[+op.earliest_start as number] || []).length
-            ).length;
-            const verticalOffset = 48; // Offset in px
-            newPositions.set(
-              operation.key,
-              predecessorPosition - 67.35 + numOperationsAbove * verticalOffset
+          // Sort the predecessor column by the current positions to accurately count operations above
+          const sortedColumn = [...predecessorColumn].sort((a, b) => {
+            return (
+              (newPositions.get(a.key) ?? 0) - (newPositions.get(b.key) ?? 0)
             );
-          }
+          });
+
+          // Calculate the number of operations above the predecessor in its column
+          const numOperationsAbove = sortedColumn.findIndex(
+            (op) => op.key === predecessor.key
+          );
+
+          const verticalOffset = 48; // Offset in px
+          const blockheight = 134.7; // height of a block
+          const adjustedMarginTop =
+            numOperationsAbove * blockheight +
+            (numOperationsAbove - 1) * verticalOffset;
+
+          newPositions.set(
+            operation.key,
+            (newPositions.get(predecessor.key) ?? 0) +
+              Math.max(adjustedMarginTop, 0)
+          );
         }
       });
     });
 
     setPositions(newPositions);
   }, [dataSource]);
-
-  // Group operations by earliest_start time to maintain column structure
-  const groupedData = dataSource.reduce(
-    (acc: { [key: number]: Operation[] }, operation) => {
-      if (
-        operation.earliest_start !== undefined &&
-        operation.earliest_finish !== undefined &&
-        operation.latest_start !== undefined &&
-        operation.latest_finish !== undefined &&
-        operation.time_slack !== undefined
-      ) {
-        const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
-        if (!acc[level]) {
-          acc[level] = [];
-        }
-        acc[level].push(operation);
-      }
-      return acc;
-    },
-    {}
-  );
 
   // Define idMap with the appropriate type
   const idMap: { [key: string]: string } = dataSource.reduce(
@@ -112,12 +113,43 @@ const DiagramField: React.FC = () => {
         Calculate
       </Button>
 
-      {Object.keys(groupedData).length > 0 && (
+      {Object.keys(
+        dataSource.reduce((acc: { [key: number]: Operation[] }, operation) => {
+          const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
+          if (!acc[level]) {
+            acc[level] = [];
+          }
+          acc[level].push(operation);
+          return acc;
+        }, {})
+      ).length > 0 && (
         <ArcherContainer>
           <div className="diagram-grid-container">
             <div className="diagram-grid">
-              {Object.keys(groupedData).map((level) => {
-                const columnData = groupedData[+level];
+              {Object.keys(
+                dataSource.reduce(
+                  (acc: { [key: number]: Operation[] }, operation) => {
+                    const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
+                    if (!acc[level]) {
+                      acc[level] = [];
+                    }
+                    acc[level].push(operation);
+                    return acc;
+                  },
+                  {}
+                )
+              ).map((level) => {
+                const columnData = dataSource.reduce(
+                  (acc: { [key: number]: Operation[] }, operation) => {
+                    const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
+                    if (!acc[level]) {
+                      acc[level] = [];
+                    }
+                    acc[level].push(operation);
+                    return acc;
+                  },
+                  {}
+                )[+level];
                 return (
                   <div key={level} className="diagram-column">
                     {columnData.map((operation) => {
