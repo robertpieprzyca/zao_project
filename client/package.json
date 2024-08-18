@@ -1,10 +1,12 @@
 {
-  "homepage": ".",
+  "homepage": "https://robertpieprzyca.github.io/zao_project",
   "name": "zao_project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -18,7 +20,6 @@
     "antd": "^5.19.3",
     "axios": "^1.7.3",
     "bootstrap": "^5.3.3",
-    "gh-pages": "^6.1.1",
     "react": "^18.3.1",
     "react-archer": "^4.4.0",
     "react-dom": "^18.3.1",
@@ -33,6 +34,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "gh-pages": "^6.1.1",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
   }
