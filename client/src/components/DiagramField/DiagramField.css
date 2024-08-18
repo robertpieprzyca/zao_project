@@ -4,16 +4,20 @@
   align-items: center;
 }
 .archer-container {
-  /* tutaj sie odjebalo - ze scrollem i szerokoscia grid container*/
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 16px;
+  margin-bottom: 46px;
   display: flex;
   width: 100%;
+  overflow-x: auto;
 }
 
 .diagram-grid {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 0px 64px;
+  gap: 0px 96px;
 }
 
 .diagram-column {
@@ -27,15 +31,18 @@
 }
 
 .diagram-grid-container {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-top: 16px;
-  margin-bottom: 46px;
   padding: 16px;
   width: 100%;
-  overflow-x: auto;
 }
 
-.diagram-title {
-  margin-bottom: 16px;
+.diagram-header {
+  flex-direction: column;
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
+/* dodac kalkulowanie block height dynamiczne zeby liczylo bordery w set position*/
+/* .critical-block {
+  border: 2px solid red;
+  border-radius: 4px;
+} */

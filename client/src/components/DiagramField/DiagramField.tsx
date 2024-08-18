@@ -9,6 +9,8 @@ import "./DiagramField.css";
 const DiagramField: React.FC = () => {
   const [dataSource, setDataSource] = useState<Operation[]>([]);
   const [positions, setPositions] = useState<Map<string, number>>(new Map());
+  let strokeColor: string;
+  let borderColor: string;
 
   const fetchDataFromLocalStorage = () => {
     const savedData = localStorage.getItem("operationsData");
@@ -107,108 +109,120 @@ const DiagramField: React.FC = () => {
   );
 
   return (
-    <div className="diagram-field">
-      <h2 className="diagram-title">Diagram Field</h2>
-      <Button type="primary" onClick={handleCalculate}>
-        Calculate
-      </Button>
+    <>
+      <div className="diagram-header">
+        <h2 className="diagram-title">Diagram Field</h2>
+        <Button type="primary" onClick={handleCalculate}>
+          Calculate
+        </Button>
+      </div>
+      <div className="diagram-field">
+        {Object.keys(
+          dataSource.reduce(
+            (acc: { [key: number]: Operation[] }, operation) => {
+              const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
+              if (!acc[level]) {
+                acc[level] = [];
+              }
+              acc[level].push(operation);
+              return acc;
+            },
+            {}
+          )
+        ).length > 0 && (
+          <ArcherContainer className="archer-container">
+            <div className="diagram-grid-container">
+              <div className="diagram-grid">
+                {Object.keys(
+                  dataSource.reduce(
+                    (acc: { [key: number]: Operation[] }, operation) => {
+                      const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
+                      if (!acc[level]) {
+                        acc[level] = [];
+                      }
+                      acc[level].push(operation);
+                      return acc;
+                    },
+                    {}
+                  )
+                ).map((level) => {
+                  const columnData = dataSource.reduce(
+                    (acc: { [key: number]: Operation[] }, operation) => {
+                      const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
+                      if (!acc[level]) {
+                        acc[level] = [];
+                      }
+                      acc[level].push(operation);
+                      return acc;
+                    },
+                    {}
+                  )[+level];
+                  return (
+                    <div key={level} className="diagram-column">
+                      {columnData.map((operation) => {
+                        const marginTop = positions.get(operation.key) || 0;
 
-      {Object.keys(
-        dataSource.reduce((acc: { [key: number]: Operation[] }, operation) => {
-          const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
-          if (!acc[level]) {
-            acc[level] = [];
-          }
-          acc[level].push(operation);
-          return acc;
-        }, {})
-      ).length > 0 && (
-        <ArcherContainer>
-          <div className="diagram-grid-container">
-            <div className="diagram-grid">
-              {Object.keys(
-                dataSource.reduce(
-                  (acc: { [key: number]: Operation[] }, operation) => {
-                    const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
-                    if (!acc[level]) {
-                      acc[level] = [];
-                    }
-                    acc[level].push(operation);
-                    return acc;
-                  },
-                  {}
-                )
-              ).map((level) => {
-                const columnData = dataSource.reduce(
-                  (acc: { [key: number]: Operation[] }, operation) => {
-                    const level = operation.earliest_start ?? 0; // Use 0 as a default if undefined
-                    if (!acc[level]) {
-                      acc[level] = [];
-                    }
-                    acc[level].push(operation);
-                    return acc;
-                  },
-                  {}
-                )[+level];
-                return (
-                  <div key={level} className="diagram-column">
-                    {columnData.map((operation) => {
-                      const marginTop = positions.get(operation.key) || 0;
-
-                      return (
-                        <ArcherElement
-                          key={operation.key}
-                          id={operation.key}
-                          relations={
-                            operation.next_operation_number
-                              .split(",")
-                              .map((nextOp) => {
-                                const targetId = idMap[nextOp.trim()];
-                                const targetOperation = dataSource.find(
-                                  (op) => op.key === targetId
-                                );
-                                const strokeColor =
-                                  operation.time_slack === 0 &&
-                                  targetOperation?.time_slack === 0
-                                    ? "red"
-                                    : "black";
-                                return targetId
-                                  ? {
-                                      targetId: targetId,
-                                      targetAnchor: "left",
-                                      sourceAnchor: "right",
-                                      style: {
-                                        strokeColor: strokeColor,
-                                        strokeWidth: 1.5,
-                                        lineStyle: "curve",
-                                      },
-                                    }
-                                  : null;
-                              })
-                              .filter((relation) => relation !== null) as any
-                          }
-                        >
-                          <div
-                            className="diagram-block-container"
-                            style={{
-                              marginTop: `${marginTop}px`,
-                            }}
+                        return (
+                          <ArcherElement
+                            key={operation.key}
+                            id={operation.key}
+                            relations={
+                              operation.next_operation_number
+                                .split(",")
+                                .map((nextOp) => {
+                                  const targetId = idMap[nextOp.trim()];
+                                  const targetOperation = dataSource.find(
+                                    (op) => op.key === targetId
+                                  );
+                                  strokeColor =
+                                    operation.time_slack === 0 &&
+                                    targetOperation?.time_slack === 0
+                                      ? "red"
+                                      : "black";
+                                  borderColor =
+                                    operation.time_slack === 0 ? "red" : "";
+                                  return targetId
+                                    ? {
+                                        targetId: targetId,
+                                        targetAnchor: "left",
+                                        sourceAnchor: "right",
+                                        style: {
+                                          borderColor: borderColor,
+                                          strokeColor: strokeColor,
+                                          strokeWidth: 1.5,
+                                          lineStyle: "curve",
+                                        },
+                                      }
+                                    : null;
+                                })
+                                .filter((relation) => relation !== null) as any
+                            }
                           >
-                            <DiagramBlock
-                              data={operation as Required<Operation>}
-                            />
-                          </div>
-                        </ArcherElement>
-                      );
-                    })}
-                  </div>
-                );
-              })}
+                            <div
+                              className={
+                                "diagram-block-container " +
+                                (borderColor == "red" ? "critical-block" : "")
+                              }
+                              style={{
+                                marginTop: `${marginTop}px`,
+                              }}
+                            >
+                              <DiagramBlock
+                                data={operation as Required<Operation>}
+                              />
+                            </div>
+                          </ArcherElement>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </ArcherContainer>
-      )}
-    </div>
+          </ArcherContainer>
+        )}
+      </div>
+    </>
   );
 };
 
