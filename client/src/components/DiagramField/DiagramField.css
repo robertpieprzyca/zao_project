@@ -31,6 +31,7 @@
 
 .diagram-block-container {
   width: 160px;
+  z-index: 1;
 }
 
 .diagram-grid-container {
@@ -44,8 +45,3 @@
   gap: 16px;
   align-items: center;
 }
-/* dodac kalkulowanie block height dynamiczne zeby liczylo bordery w set position*/
-/* .critical-block {
-  border: 2px solid red;
-  border-radius: 4px;
-} */
