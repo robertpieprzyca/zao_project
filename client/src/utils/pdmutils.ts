@@ -20,7 +20,7 @@ export const calculatePDM = (operations: Operation[]) => {
     operation.earliest_finish = 0;
     operation.latest_start = 0;
     operation.latest_finish = 0;
-    operation.time_slack = 0; // Initialize time_slack
+    operation.time_slack = 0;
     operationMap.set(operation.operation_number, operation);
   });
 
