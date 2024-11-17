@@ -8,13 +8,12 @@ export type Operation = {
   earliest_finish?: number;
   latest_start?: number;
   latest_finish?: number;
-  time_slack?: number; // New field for time slack
+  time_slack?: number;
 };
 
 export const calculatePDM = (operations: Operation[]) => {
   const operationMap = new Map<string, Operation>();
 
-  // Initialize properties
   operations.forEach((operation) => {
     operation.earliest_start = 0;
     operation.earliest_finish = 0;
@@ -32,7 +31,6 @@ export const calculatePDM = (operations: Operation[]) => {
     calculateLatest(operation, operationMap);
   });
 
-  // Calculate time_slack after calculating earliest and latest finish times
   operations.forEach((operation) => {
     if (
       operation.earliest_finish !== undefined &&
@@ -52,7 +50,6 @@ const calculateEarliest = (
 ) => {
   if (operation.earliest_start !== 0) return;
 
-  // Find predecessors based on their next_operation_number
   const predecessors = Array.from(operationMap.values()).filter((op) =>
     op.next_operation_number.split(",").includes(operation.operation_number)
   );
@@ -63,7 +60,7 @@ const calculateEarliest = (
     operation.earliest_start = Math.max(
       ...predecessors.map((predecessor) => {
         calculateEarliest(predecessor, operationMap);
-        return predecessor.earliest_finish!; // Non-null assertion
+        return predecessor.earliest_finish!;
       })
     );
   }
@@ -78,7 +75,6 @@ const calculateLatest = (
 ) => {
   if (operation.latest_finish !== 0) return;
 
-  // Find successors based on operation's next_operation_number
   const successors = Array.from(operationMap.values()).filter((op) =>
     operation.next_operation_number.split(",").includes(op.operation_number)
   );
@@ -89,7 +85,7 @@ const calculateLatest = (
     operation.latest_finish = Math.min(
       ...successors.map((successor) => {
         calculateLatest(successor, operationMap);
-        return successor.latest_start!; // Non-null assertion
+        return successor.latest_start!;
       })
     );
   }
