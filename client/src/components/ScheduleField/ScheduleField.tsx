@@ -9,7 +9,6 @@ const ScheduleField: React.FC = () => {
   const [operationsData, setOperationsData] = useState<Operation[]>([]);
   const [calculated, setCalculated] = useState<Operation[]>([]);
 
-  // Fetch data from local storage
   const fetchDataFromLocalStorage = () => {
     const savedData = localStorage.getItem("operationsData");
     if (savedData) {
@@ -18,7 +17,6 @@ const ScheduleField: React.FC = () => {
     return [];
   };
 
-  // Handle calculate button click
   const handleCalculate = () => {
     const latestData = fetchDataFromLocalStorage();
     const calculatedData = calculatePDM(latestData);
