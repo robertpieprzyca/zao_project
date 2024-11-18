@@ -26,13 +26,11 @@ const ScheduleField: React.FC = () => {
     setOperationsData(latestData);
   };
 
-  // Calculate the number of rows and columns
   const latestFinishTime = Math.max(
     ...calculated.map((operation) => operation.latest_finish ?? 0)
   );
   const numCols = latestFinishTime;
 
-  // Reverse the operations list
   const reversedOperations = [...operationsData].reverse();
 
   // Function to calculate the sum of resources for each column
@@ -66,7 +64,6 @@ const ScheduleField: React.FC = () => {
     "latest_finish"
   );
 
-  // Function to calculate the slack for an operation
   const calculateSlack = (operation: Operation) => {
     if (
       operation.latest_finish !== undefined &&
@@ -77,7 +74,6 @@ const ScheduleField: React.FC = () => {
     return undefined;
   };
 
-  // Function to determine the cell color based on slack
   const getCellColor = (slack: number | undefined) => {
     if (slack === 0) {
       return "#FF6666";
@@ -87,9 +83,7 @@ const ScheduleField: React.FC = () => {
     return "transparent";
   };
 
-  // Function to get color based on resource value
   const getResourceColor = (value: number) => {
-    // Define color scale
     const maxValue = Math.max(
       ...forwardScheduleResourcesSum,
       ...backwardScheduleResourcesSum
