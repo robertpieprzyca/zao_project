@@ -31,7 +31,6 @@ const ScheduleField: React.FC = () => {
 
   const reversedOperations = [...operationsData].reverse();
 
-  // Function to calculate the sum of resources for each column
   const calculateResourcesSum = (
     operations: Operation[],
     timeStartKey: keyof Operation,
